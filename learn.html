@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn — Intrucive</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+  .lesson-top { background: var(--white); border-bottom: 1px solid var(--bg-3); padding: 16px 48px; display: flex; align-items: center; justify-content: space-between; }
+  .lesson-phase-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 4px; }
+  .task-box { background: var(--gold-pale); border: 1px solid rgba(240,160,16,0.25); border-radius: var(--radius-lg); padding: 24px; margin: 32px 0; }
+  .task-box h3 { font-family: var(--serif); font-size: 20px; color: var(--ink); margin-bottom: 8px; }
+  .task-box p { font-size: 14px; color: var(--ink-2); line-height: 1.7; margin-bottom: 16px; }
+  .upload-zone {
+    border: 2px dashed var(--bg-3); border-radius: var(--radius);
+    padding: 32px; text-align: center; cursor: pointer;
+    transition: all 0.2s; background: var(--white);
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--gold); background: var(--gold-pale); }
+  .upload-zone p { font-size: 14px; color: var(--ink-3); margin-top: 8px; }
+  .lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--bg-3); }
+  .phase-group-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-4); padding: 12px 20px 6px; }
+  .content-block { margin-bottom: 24px; }
+  .info-box { background: var(--bg-2); border-radius: var(--radius); padding: 16px 20px; margin: 16px 0; }
+  .info-box p { font-size: 14px; color: var(--ink-2); line-height: 1.7; margin: 0; }
+</style>
+</head>
+<body>
+<div style="display:flex; height:100vh; overflow:hidden;">
+  <!-- Lesson Sidebar -->
+  <nav class="lesson-sidebar" style="width:280px; flex-shrink:0;">
+    <div style="padding:16px 20px; border-bottom:1px solid var(--bg-3); margin-bottom:8px;">
+      <a href="dashboard.html"><img src="assets/logo.png" alt="Intrucive" style="height:24px;"></a>
+    </div>
+    <div id="lesson-nav"><!-- rendered by JS --></div>
+  </nav>
+
+  <!-- Main -->
+  <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+    <div class="lesson-top">
+      <div>
+        <div class="lesson-phase-label" id="lesson-phase-label">Phase 0</div>
+        <div class="text-sm font-medium" id="lesson-breadcrumb">AI Foundations</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="progress-bar" style="width:120px;"><div class="progress-fill" id="top-progress" style="width:0%"></div></div>
+        <span class="text-sm text-muted" id="top-progress-label">0%</span>
+        <a href="dashboard.html" class="btn btn-ghost btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Dashboard
+        </a>
+      </div>
+    </div>
+
+    <div style="max-width:760px; padding:40px 48px; margin:0 auto; width:100%;" class="lesson-content">
+      <div id="lesson-content-area">
+        <!-- rendered by JS -->
+      </div>
+
+      <div class="task-box" id="task-box">
+        <h3>Your Task</h3>
+        <p id="task-description">Complete this lesson's practical task and upload your evidence below.</p>
+        <div id="pass-criteria" class="info-box" style="margin-bottom:16px;">
+          <p><strong>Pass criteria:</strong> <span id="pass-criteria-text">Clear explanation with correct concepts.</span></p>
+        </div>
+        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+          <p>Click to upload screenshot or PDF<br><span style="font-size:12px;">PNG, JPG, PDF — max 10MB</span></p>
+        </div>
+        <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.pdf" style="display:none;">
+        <div id="upload-preview" class="hidden" style="margin-top:12px; padding:12px; background:var(--white); border-radius:var(--radius); border:1px solid var(--bg-3); font-size:13px; display:flex; align-items:center; gap:10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span id="upload-filename"></span>
+        </div>
+        <div style="margin-top:16px; display:flex; gap:10px;">
+          <button class="btn btn-primary" id="submit-btn" onclick="submitTask()">Submit Task</button>
+          <button class="btn btn-ghost btn-sm" onclick="markRead()">Mark as Read Only</button>
+        </div>
+        <p class="text-xs text-muted mt-2" id="submit-status"></p>
+      </div>
+
+      <div class="lesson-nav">
+        <button class="btn btn-outline" id="prev-btn" onclick="navigate(-1)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Previous
+        </button>
+        <span class="text-sm text-muted" id="lesson-counter"></span>
+        <button class="btn btn-primary" id="next-btn" onclick="navigate(1)">
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script>
+const CURRICULUM = [
+  { phase: 0, name: 'AI Foundations', lessons: [
+    { title: 'What AI actually is', task: 'Write a short explanation of AI in your own words (PDF or screenshot of a document).', criteria: 'Clear explanation, correct basic concepts, at least one workplace example.', content: '<h1>What AI Actually Is</h1><p>Artificial intelligence (AI) refers to computer systems designed to perform tasks that normally require human intelligence — things like understanding language, recognising patterns, making decisions, and generating content.</p><p>It is important to be precise about this: AI does not "think" or "understand" in the way humans do. It is a very sophisticated pattern-matching system trained on enormous amounts of data.</p><h2>AI vs Machine Learning vs Deep Learning</h2><p>These three terms are often used interchangeably, but they are not the same thing.</p><ul><li><strong>AI</strong> is the broad concept — any technique that allows a computer to mimic human behaviour.</li><li><strong>Machine Learning (ML)</strong> is a subset of AI — systems that learn from data rather than being explicitly programmed.</li><li><strong>Deep Learning</strong> is a subset of ML — using neural networks with many layers to find patterns in complex data.</li></ul><p>Most modern AI tools you use at work (ChatGPT, Gemini, Claude) are built on deep learning.</p><h2>Why AI matters at work</h2><p>AI is changing office work in three main ways: it can draft content faster than any human typist, it can analyse and summarise large documents in seconds, and it can automate repetitive digital tasks entirely.</p><div class="info-box"><p>The key insight is not that AI will replace your job. It is that people who know how to use AI well will work faster, produce better outputs, and have more time for the work that matters.</p></div>' },
+    { title: 'GenAI vs Predictive AI', task: 'Classify 5 common workplace use cases as generative or predictive AI.', criteria: 'At least 4 correct classifications with brief reasoning.', content: '<h1>Generative AI vs Predictive AI</h1><p>There are two major types of AI that you will encounter at work. Understanding the difference helps you choose the right tool and set the right expectations.</p><h2>Generative AI</h2><p>Generative AI creates new content — text, images, code, audio, video. It does not look up answers; it generates them based on patterns learned during training. Examples: ChatGPT writing an email, DALL-E creating an image, Claude summarising a document.</p><h2>Predictive AI</h2><p>Predictive AI analyses existing data to forecast outcomes or classify inputs. It is not creating something new — it is making a prediction. Examples: spam filters in your inbox, fraud detection in banking, demand forecasting in logistics.</p><h2>When to use each</h2><ul><li>Need to write, summarise, or create? Use generative AI.</li><li>Need to predict, classify, or detect? Use predictive AI.</li><li>Most workplace AI tools you interact with daily are generative.</li></ul>' },
+    { title: 'LLMs Explained Simply', task: 'Write a one-page "LLMs in plain English" note.', criteria: 'Accurate, jargon-light, easy for a non-technical colleague to understand.', content: '<h1>Large Language Models in Plain English</h1><p>A Large Language Model (LLM) is a type of AI trained on vast amounts of text — books, websites, articles, code — to understand and generate human language.</p><h2>How they actually work</h2><p>LLMs predict the next word (or "token") in a sequence. They have learned statistical patterns from trillions of words. When you ask ChatGPT a question, it is not "searching" a database — it is generating a response token by token, each predicted from the previous ones.</p><div class="info-box"><p><strong>Tokens</strong> are chunks of text — roughly 0.75 words on average. A 1,000 word document is about 1,300 tokens. Models have context windows: the amount of text they can process at once. Bigger context windows mean longer documents.</p></div><h2>Why they sometimes fail</h2><p>Because LLMs generate text by prediction rather than retrieval, they can produce plausible-sounding but incorrect information. This is called hallucination. They do not "know" facts — they learned patterns. Always verify important outputs.</p>' },
+    { title: 'AI Myths and Limitations', task: 'List 5 common AI myths and write the correct version of each.', criteria: 'All myths corrected with practical, accurate language.', content: '<h1>AI Myths and Limitations</h1><p>One of the most valuable things you can learn about AI is what it cannot do. Misplaced trust in AI is one of the most common workplace mistakes.</p><h2>Common myths</h2><ul><li><strong>Myth: AI is always right.</strong> Reality: AI frequently makes errors, especially on specific facts, recent events, and niche topics.</li><li><strong>Myth: AI understands what you mean.</strong> Reality: AI processes patterns in text. It does not understand intent the way humans do. Clear prompts produce better outputs.</li><li><strong>Myth: AI will replace everyone.</strong> Reality: AI changes which tasks take time, not which jobs exist. People who use AI well become more valuable.</li><li><strong>Myth: AI has access to current information.</strong> Reality: Most LLMs have training cutoffs. For current events, use tools like Perplexity or Grok.</li><li><strong>Myth: If it sounds confident, it is correct.</strong> Reality: LLMs generate fluent, confident-sounding text even when wrong. Confidence in the output is not a quality signal.</li></ul>' },
+    { title: 'Hallucinations and Verification', task: 'Identify 3 possible AI errors in sample outputs provided.', criteria: 'Correctly identifies uncertain or false claims and explains why they are risky.', content: '<h1>Hallucinations and Verification</h1><p>Hallucination is the term for when an AI model generates information that sounds plausible but is factually incorrect. This is one of the most important things to understand before using AI at work.</p><h2>Why hallucinations happen</h2><p>LLMs predict the next token based on learned patterns. They do not retrieve facts from a database — they generate text that statistically fits the context. When a model does not have strong signal for a fact, it may generate something plausible-sounding but wrong.</p><h2>Common hallucination types</h2><ul><li>Made-up statistics (e.g. "Studies show 73% of workers prefer...")</li><li>Invented citations (books, papers, or URLs that do not exist)</li><li>Wrong dates, names, or company details</li><li>Outdated information presented as current</li></ul><h2>Verification habits</h2><ul><li>Always check specific claims against primary sources</li><li>Use Perplexity or search for facts that require accuracy</li><li>Never paste AI output directly into a document for external use without checking</li><li>Ask the AI to cite sources — then verify those sources exist</li></ul><div class="info-box"><p>The rule: use AI to accelerate your thinking, not to replace your verification habits.</p></div>' },
+    { title: 'Privacy and Security', task: 'Mark 10 data items as safe or unsafe to share with AI tools.', criteria: 'At least 8/10 correct, with strong privacy judgment demonstrated.', content: '<h1>Privacy and Security in AI</h1><p>This is one of the most important lessons in the entire program. Using AI safely at work is not just about getting good outputs — it is about protecting your company, your colleagues, and your customers.</p><h2>What not to paste into AI</h2><ul><li>Customer names, emails, phone numbers, or addresses</li><li>Employee personal information (salaries, performance reviews, medical data)</li><li>Confidential contracts or financial data</li><li>Unpublished product roadmaps or strategy documents</li><li>Passwords, API keys, or system credentials</li><li>Personally identifiable information (PII) of any kind</li></ul><h2>Safe to use</h2><ul><li>Anonymised or fictional examples based on real scenarios</li><li>Generic templates and frameworks</li><li>Public information you are already allowed to share</li><li>Draft content that does not contain real client or employee data</li></ul><div class="info-box"><p><strong>Rule of thumb:</strong> If you would not email it to a stranger, do not paste it into a public AI tool. Use anonymised versions of everything sensitive.</p></div><h2>Safe prompt habits</h2><p>Always strip identifying information before sharing. Use placeholders: "Client A" instead of a real name, "[COMPANY NAME]" instead of your client's name, "[AMOUNT]" instead of real figures.</p>' }
+  ]},
+  { phase: 1, name: 'Core AI Tools', lessons: [
+    { title: 'AI Tools Landscape Overview', task: 'Match each major AI tool to its best use case.', criteria: 'Accurate matching across core tools with brief reasoning.', content: '<h1>The AI Tools Landscape</h1><p>One of the most valuable skills in the program is knowing which AI tool to use for which job. Most people default to one tool for everything. That wastes time and produces worse results.</p><h2>The major workplace AI tools</h2><ul><li><strong>ChatGPT</strong> — General work, writing, prompting, analysis, images, reports. Best starting point.</li><li><strong>Gemini</strong> — Google ecosystem, web, mobile, multimodal tasks. Strong in Google workflows.</li><li><strong>Claude</strong> — Long documents, writing quality, reasoning. Best for deep reading and polished output.</li><li><strong>Perplexity</strong> — Research, citations, market and competitor analysis. Source-backed research engine.</li><li><strong>Kimi</strong> — Large context, multiple reports, coding help. Best for multi-document analysis.</li><li><strong>NotebookLM</strong> — Knowledge bases, PDFs, grounded Q&A. AI trained on your own files.</li><li><strong>Notion</strong> — Notes, wikis, databases, team systems. Knowledge organisation layer.</li><li><strong>Zapier</strong> — App automation, triggers and actions. Automation backbone.</li><li><strong>Gumloop</strong> — AI workflows, agents, chained automations. Advanced AI automation builder.</li><li><strong>Lovable</strong> — Prompt-to-app, websites, internal tools. App building for non-engineers.</li><li><strong>Canva</strong> — Decks, visuals, branded content. Fast polished visual creation.</li><li><strong>Copilot</strong> — Word, Excel, PowerPoint, Teams. Office suite AI layer.</li><li><strong>Grok</strong> — Live social/web intelligence, trend reading. Real-time research.</li></ul>' },
+    { title: 'AI Tool Selection Framework', task: 'Choose the best tool for 10 workplace scenarios.', criteria: '8/10 correct with good reasoning — not just memorisation.', content: '<h1>AI Tool Selection Framework</h1><p>The goal is not to memorise tools — it is to develop the instinct for choosing the right one. Here is the framework that makes it fast.</p><h2>The decision map</h2><ul><li><strong>Research with sources</strong> → Perplexity</li><li><strong>Long documents</strong> → Claude or Kimi</li><li><strong>General writing and drafting</strong> → ChatGPT</li><li><strong>Google ecosystem</strong> → Gemini</li><li><strong>Knowledge base from your files</strong> → NotebookLM</li><li><strong>Automation</strong> → Zapier or Gumloop</li><li><strong>App building</strong> → Lovable</li><li><strong>Team organisation</strong> → Notion</li><li><strong>Live trends and public web</strong> → Grok</li><li><strong>Office suite (Word, Excel, Teams)</strong> → Copilot</li><li><strong>Visuals and presentations</strong> → Canva</li></ul><div class="info-box"><p>The best prompt is not just what you type — it is choosing the right tool before you type anything. A great Perplexity query beats a great ChatGPT query when you need cited, current facts.</p></div>' }
+  ]},
+  { phase: 2, name: 'ChatGPT Mastery', lessons: [
+    { title: 'Prompt Engineering Basics', task: 'Rewrite a weak prompt into a strong, structured prompt.', criteria: 'Prompt has clear context, role, constraints, and output format.', content: '<h1>Prompt Engineering Basics</h1><p>Prompt engineering is simply the skill of asking AI clearly. The better your prompt, the better your output. This is the highest-leverage skill in the entire program.</p><h2>The anatomy of a strong prompt</h2><ul><li><strong>Role</strong> — Tell the AI who it is. "You are an experienced HR manager."</li><li><strong>Context</strong> — Give the situation. "We are onboarding 20 new hires next month."</li><li><strong>Task</strong> — Be specific. "Write a welcome email that explains the first week schedule."</li><li><strong>Constraints</strong> — Set limits. "Keep it under 200 words. Tone should be warm but professional."</li><li><strong>Output format</strong> — Specify the structure. "Use bullet points for the schedule section."</li></ul><h2>Before and after</h2><div class="info-box"><p><strong>Weak:</strong> "Write an email."<br><strong>Strong:</strong> "You are an HR manager at a tech startup. Write a warm welcome email to a new software engineer starting Monday. Include: a warm opening, what to expect on day 1, who to contact with questions. Keep it under 150 words. Professional but friendly tone."</p></div>' },
+    { title: 'Writing Professional Emails', task: 'Generate a professional email for a provided workplace scenario.', criteria: 'Ready-to-send quality, clear call to action, appropriate tone.', content: '<h1>Writing Professional Emails with ChatGPT</h1><p>Email is where most office workers spend a significant part of their day. AI can dramatically reduce the time you spend drafting, especially for repetitive or difficult emails.</p><h2>Email types to practice</h2><ul><li>Follow-up after a meeting</li><li>Requesting information or approval</li><li>Delivering difficult news diplomatically</li><li>Cold outreach or introduction</li><li>Internal status update</li></ul><h2>Best practices</h2><p>Always provide: the relationship (who is this to?), the purpose (what do you want?), the tone (formal, warm, direct?), and any constraints (length, deadline). Then review and personalise before sending. AI gives you a strong first draft — your judgment makes it final.</p>' },
+    { title: 'Meeting Notes and Summaries', task: 'Create a structured meeting summary from rough notes.', criteria: 'Includes decisions, actions, owners, and next steps.', content: '<h1>Meeting Notes and Summaries</h1><p>Most meetings produce scattered notes. AI can turn those into structured, actionable summaries in seconds — saving you and your team significant time.</p><h2>The meeting summary structure</h2><ul><li><strong>Meeting date and attendees</strong></li><li><strong>Decisions made</strong> — clear outcomes agreed upon</li><li><strong>Action items</strong> — task, owner, deadline</li><li><strong>Risks or blockers raised</strong></li><li><strong>Next meeting or follow-up</strong></li></ul><h2>How to use AI for this</h2><p>Paste your rough notes (even messy ones) into ChatGPT and ask: "Turn these rough meeting notes into a structured summary with decisions, action items with owners, and next steps." The output will be clean enough to share directly.</p>' },
+    { title: 'Reports and Documentation', task: 'Convert rough notes into a polished internal report.', criteria: 'Clear structure, professional language, workplace-ready format.', content: '<h1>Reports and Documentation</h1><p>Turning rough notes, data, and thoughts into polished documents used to take hours. AI can produce a solid first draft from your notes in under a minute — your job is to review, personalise, and refine.</p><h2>Document types to practice</h2><ul><li>Status reports and project updates</li><li>Standard operating procedures (SOPs)</li><li>Executive summaries</li><li>Post-mortem reports</li><li>Proposals and recommendations</li></ul><h2>The workflow</h2><p>1. Collect your rough notes or data. 2. Paste into ChatGPT with a clear instruction about the document type, audience, and length. 3. Review the output critically — add specifics, remove inaccuracies, and apply your own judgment. 4. Send or submit the polished document.</p>' },
+    { title: 'Advanced ChatGPT Workflows', task: 'Research a topic and produce a structured mini working brief.', criteria: 'Useful structure, clear synthesis, not just copied AI output.', content: '<h1>Advanced ChatGPT Workflows</h1><p>Beyond basic drafting, ChatGPT has powerful workflows that dramatically increase what you can produce in a single session.</p><h2>Project workflows</h2><p>Use ChatGPT Projects to maintain context across multiple conversations about the same topic. Upload reference documents, set custom instructions, and build a workspace that remembers your context.</p><h2>Deep research</h2><p>Ask ChatGPT to research a topic in depth, generate multiple perspectives, and synthesise them into a structured output. Always verify key facts with Perplexity afterward.</p><h2>Iteration</h2><p>Never accept the first output. Iterate: "Make it more concise." "Change the tone to be more direct." "Add a section on risks." "Rewrite the opening." Each iteration takes seconds and dramatically improves the result.</p><h2>Image generation</h2><p>Use ChatGPT with DALL-E integration to generate visuals for presentations, documents, and social content. Describe what you need precisely: subject, style, composition, mood, format.</p>' }
+  ]}
+];
+
+let currentPhaseIdx = 0;
+let currentLessonIdx = 0;
+let allLessons = [];
+let currentUser = null;
+
+function buildAllLessons() {
+  allLessons = [];
+  CURRICULUM.forEach(phase => {
+    phase.lessons.forEach(lesson => {
+      allLessons.push({ ...lesson, phaseName: phase.name, phaseNum: phase.phase });
+    });
+  });
+}
+
+function getCurrentLesson() {
+  return allLessons[currentLessonIdx] || allLessons[0];
+}
+
+function renderNav() {
+  const el = document.getElementById('lesson-nav');
+  let html = '';
+  CURRICULUM.forEach(phase => {
+    html += `<div class="phase-group-title">Phase ${phase.phase} — ${phase.name}</div>`;
+    phase.lessons.forEach((lesson, li) => {
+      const globalIdx = allLessons.findIndex(l => l.phaseName === phase.name && l.title === lesson.title);
+      const isCur = globalIdx === currentLessonIdx;
+      html += `<div class="lesson-nav-item ${isCur ? 'active' : ''}" onclick="goToLesson(${globalIdx})">
+        <div class="check-circle ${isCur ? 'active' : ''}"></div>
+        <span>${lesson.title}</span>
+      </div>`;
+    });
+  });
+  el.innerHTML = html;
+}
+
+function renderLesson() {
+  const lesson = getCurrentLesson();
+  document.getElementById('lesson-phase-label').textContent = `Phase ${lesson.phaseNum}`;
+  document.getElementById('lesson-breadcrumb').textContent = lesson.phaseName;
+  document.getElementById('lesson-content-area').innerHTML = lesson.content;
+  document.getElementById('task-description').textContent = lesson.task;
+  document.getElementById('pass-criteria-text').textContent = lesson.criteria;
+  document.getElementById('lesson-counter').textContent = `${currentLessonIdx + 1} of ${allLessons.length}`;
+  document.getElementById('prev-btn').disabled = currentLessonIdx === 0;
+  document.getElementById('next-btn').disabled = currentLessonIdx === allLessons.length - 1;
+  const pct = Math.round((currentLessonIdx / allLessons.length) * 100);
+  document.getElementById('top-progress').style.width = pct + '%';
+  document.getElementById('top-progress-label').textContent = pct + '%';
+  document.getElementById('submit-status').textContent = '';
+  document.getElementById('upload-preview').classList.add('hidden');
+  document.getElementById('upload-filename').textContent = '';
+  renderNav();
+  window.scrollTo(0, 0);
+}
+
+function goToLesson(idx) {
+  currentLessonIdx = idx;
+  renderLesson();
+}
+
+function navigate(dir) {
+  const next = currentLessonIdx + dir;
+  if (next >= 0 && next < allLessons.length) {
+    currentLessonIdx = next;
+    renderLesson();
+  }
+}
+
+async function markRead() {
+  if (!currentUser) return;
+  const lesson = getCurrentLesson();
+  await sb.from('lesson_progress').upsert({
+    user_id: currentUser.id,
+    phase_num: lesson.phaseNum,
+    lesson_title: lesson.title,
+    completed: true
+  }, { onConflict: 'user_id,phase_num,lesson_title' });
+  toast('Marked as read', 'success');
+}
+
+async function submitTask() {
+  const file = document.getElementById('file-input').files[0];
+  const lesson = getCurrentLesson();
+  if (!currentUser) return;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  try {
+    let fileUrl = null;
+    if (file) {
+      const path = `${currentUser.id}/${lesson.phaseNum}-${lesson.title.replace(/\s+/g,'-')}-${Date.now()}.${file.name.split('.').pop()}`;
+      const { error: uploadErr } = await sb.storage.from('submissions').upload(path, file);
+      if (!uploadErr) {
+        const { data: { publicUrl } } = sb.storage.from('submissions').getPublicUrl(path);
+        fileUrl = publicUrl;
+      }
+    }
+    await sb.from('submissions').insert({
+      user_id: currentUser.id,
+      phase_num: lesson.phaseNum,
+      lesson_name: lesson.title,
+      file_url: fileUrl,
+      status: 'pending'
+    });
+    await sb.from('lesson_progress').upsert({
+      user_id: currentUser.id,
+      phase_num: lesson.phaseNum,
+      lesson_title: lesson.title,
+      completed: true
+    }, { onConflict: 'user_id,phase_num,lesson_title' });
+    await sb.from('profiles').update({ xp: (currentUser.xp || 0) + 50 }).eq('id', currentUser.id);
+    document.getElementById('submit-status').textContent = 'Submitted for review. +50 XP earned.';
+    document.getElementById('submit-status').style.color = 'var(--green)';
+    toast('Task submitted successfully! +50 XP', 'success');
+  } catch(e) {
+    toast('Submission failed: ' + e.message, 'error');
+  }
+  btn.disabled = false; btn.textContent = 'Submit Task';
+}
+
+document.getElementById('file-input').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if (f) {
+    document.getElementById('upload-filename').textContent = f.name;
+    document.getElementById('upload-preview').classList.remove('hidden');
+  }
+});
+
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) {
+    document.getElementById('file-input').files = e.dataTransfer.files;
+    document.getElementById('upload-filename').textContent = f.name;
+    document.getElementById('upload-preview').classList.remove('hidden');
+  }
+});
+
+(async () => {
+  const session = await requireAuth();
+  if (!session) return;
+  currentUser = session.user;
+  const params = new URLSearchParams(location.search);
+  const phase = parseInt(params.get('phase') || '0');
+  buildAllLessons();
+  const startIdx = allLessons.findIndex(l => l.phaseNum === phase);
+  currentLessonIdx = startIdx >= 0 ? startIdx : 0;
+  renderLesson();
+})();
+
+function toast(msg, type) {
+  const c = document.getElementById('toast');
+  const d = document.createElement('div');
+  d.className = 'toast-item' + (type ? ' ' + type : '');
+  d.textContent = msg;
+  c.appendChild(d);
+  setTimeout(() => d.remove(), 3200);
+}
+</script>
+</body>
+</html>

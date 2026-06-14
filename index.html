@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intrucive — Workplace AI Operating System Certification</title>
+<meta name="description" content="Learn AI. Build with AI. Work Faster. Free certification program for modern workplaces.">
+<link rel="stylesheet" href="css/main.css">
+<style>
+  .gold-line { width: 48px; height: 2px; background: var(--gold); margin: 0 auto 24px; }
+  .phase-row { display: flex; flex-direction: column; gap: 0; }
+  .phase-item {
+    display: grid; grid-template-columns: 80px 1fr;
+    border-bottom: 1px solid var(--bg-3); padding: 28px 0;
+    gap: 24px; align-items: start;
+  }
+  .phase-item:last-child { border-bottom: none; }
+  .phase-tag {
+    font-family: var(--serif); font-size: 13px; font-weight: 500;
+    color: var(--gold); letter-spacing: 0.04em; padding-top: 4px;
+  }
+  .phase-info h3 { font-size: 20px; margin-bottom: 6px; }
+  .phase-info p { font-size: 14px; color: var(--ink-3); line-height: 1.6; }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--gold-pale); display: flex; align-items: center;
+    justify-content: center; margin-bottom: 16px;
+    color: var(--gold-dark);
+  }
+  .tool-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 20px;
+    background: var(--white); border: 1px solid var(--bg-3);
+    font-size: 13px; font-weight: 500; color: var(--ink-2);
+    margin: 4px;
+  }
+  .tool-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .cert-card {
+    background: var(--ink); color: var(--white);
+    border-radius: var(--radius-lg); padding: 40px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cert-card::before {
+    content: ''; position: absolute; inset: 12px;
+    border: 1px solid rgba(240,160,16,0.3); border-radius: 8px; pointer-events: none;
+  }
+  .cert-card h3 { font-family: var(--serif); font-size: 26px; color: var(--gold); margin-bottom: 8px; }
+  .cert-card p { font-size: 14px; color: var(--ink-4); line-height: 1.6; }
+  .testimonial {
+    padding: 32px; border-radius: var(--radius-lg);
+    background: var(--white); border: 1px solid var(--bg-3);
+  }
+  .testimonial p { font-family: var(--serif); font-size: 18px; font-style: italic; color: var(--ink); line-height: 1.6; margin-bottom: 16px; }
+  .testimonial-author { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--bg-3); border-radius: var(--radius-lg); overflow: hidden; }
+  .stat-item { padding: 32px 24px; text-align: center; border-right: 1px solid var(--bg-3); }
+  .stat-item:last-child { border-right: none; }
+  .stat-item .n { font-family: var(--serif); font-size: 48px; font-weight: 400; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+  .stat-item .l { font-size: 13px; color: var(--ink-3); }
+  .company-box {
+    background: var(--gold-pale); border: 1px solid rgba(240,160,16,0.2);
+    border-radius: var(--radius-lg); padding: 40px; display: grid;
+    grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;
+  }
+  .company-box h2 { font-size: 32px; margin-bottom: 12px; }
+  .company-box p { font-size: 15px; color: var(--ink-3); line-height: 1.7; margin-bottom: 20px; }
+  .tick-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .tick-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-2); }
+  .tick { width: 20px; height: 20px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tick svg { width: 10px; height: 10px; color: white; }
+  .faq-item { border-bottom: 1px solid var(--bg-3); padding: 20px 0; }
+  .faq-q { font-family: var(--serif); font-size: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-a { font-size: 14px; color: var(--ink-3); line-height: 1.7; margin-top: 12px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-chevron { transition: transform 0.2s; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  @media (max-width: 700px) {
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .stat-item { border-right: 1px solid var(--bg-3); border-bottom: 1px solid var(--bg-3); }
+    .company-box { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html"><img src="assets/logo.png" alt="Intrucive"></a>
+    <div class="nav-links">
+      <a class="btn btn-ghost btn-sm" href="#program">Program</a>
+      <a class="btn btn-ghost btn-sm" href="#tools">Tools</a>
+      <a class="btn btn-ghost btn-sm" href="#companies">For Companies</a>
+      <a class="btn btn-outline btn-sm" href="login.html">Sign In</a>
+      <a class="btn btn-primary btn-sm" href="login.html#signup">Get Certified Free</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- Hero -->
+  <section style="padding-top:64px; background: linear-gradient(180deg, #FDFDF9 0%, var(--bg) 100%);">
+    <div class="hero">
+      <p class="hero-eyebrow">Free Workplace AI Certification</p>
+      <h1>Learn AI.<br>Build with AI.<br><em style="color:var(--gold)">Work Faster.</em></h1>
+      <p>The first workplace AI operating system certification — practical, self-paced, and built for real office outcomes. Not theory. Real tools, real tasks, real results.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-xl" href="login.html">Start for Free</a>
+        <a class="btn btn-outline btn-xl" href="#program">View Program</a>
+      </div>
+    </div>
+    <div class="gold-line"></div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="stat-row">
+        <div class="stat-item"><div class="n">15</div><div class="l">Learning Phases</div></div>
+        <div class="stat-item"><div class="n">60+</div><div class="l">Practical Lessons</div></div>
+        <div class="stat-item"><div class="n">15</div><div class="l">AI Tools Covered</div></div>
+        <div class="stat-item"><div class="n">Free</div><div class="l">Always Free to Learn</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Program -->
+  <section class="section" id="program">
+    <div class="container">
+      <div style="max-width:540px; margin-bottom:48px;">
+        <div class="badge badge-gold mb-4">Full Curriculum</div>
+        <h2 class="section-title">A complete AI education<br>in three macro-phases</h2>
+        <p class="section-sub">From understanding what AI actually is, to automating your work, to building your own tools.</p>
+      </div>
+      <div class="grid-3" style="margin-bottom:48px;">
+        <div class="card" style="border-top: 3px solid var(--gold);">
+          <p class="phase-tag">Phase A</p>
+          <h3 style="font-size:22px; margin:8px 0 10px;">Learn</h3>
+          <p class="text-sm text-muted">Build AI understanding, tool literacy, and safe workplace usage habits from the ground up.</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--gold);">
+          <p class="phase-tag">Phase B</p>
+          <h3 style="font-size:22px; margin:8px 0 10px;">Apply</h3>
+          <p class="text-sm text-muted">Use AI for research, writing, content, automation, analysis, and collaboration workflows.</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--gold);">
+          <p class="phase-tag">Phase C</p>
+          <h3 style="font-size:22px; margin:8px 0 10px;">Build</h3>
+          <p class="text-sm text-muted">Create automations, internal tools, and your own personal AI assistant from scratch.</p>
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="phase-item"><div class="phase-tag">Phase 0</div><div class="phase-info"><h3>AI Foundations</h3><p>AI vs ML vs deep learning, LLMs, hallucinations, privacy, and workplace safety.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 1</div><div class="phase-info"><h3>Core AI Tools</h3><p>ChatGPT, Gemini, Claude, Perplexity, Kimi, Copilot, Grok — choosing the right tool.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 2</div><div class="phase-info"><h3>Knowledge Systems</h3><p>Notion and NotebookLM — building a personal and company knowledge operating system.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 3</div><div class="phase-info"><h3>Communication</h3><p>Wispr Flow, mobile AI — draft faster with voice and on-the-go productivity.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 4</div><div class="phase-info"><h3>Research and Analysis</h3><p>Deep research, citations, PDF analysis, competitor matrices, and executive summaries.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 5</div><div class="phase-info"><h3>Content Creation</h3><p>Canva, image generation, presentation decks, and branded workplace assets.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 6</div><div class="phase-info"><h3>Automation</h3><p>Zapier and Gumloop — automate repetitive work and build AI workflow pipelines.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 7</div><div class="phase-info"><h3>App Creation</h3><p>Lovable, vibe coding, and building real internal tools without traditional engineering.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 8</div><div class="phase-info"><h3>Workplace AI</h3><p>Microsoft Copilot across Word, Excel, PowerPoint, Teams, and Google Workspace AI.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 9</div><div class="phase-info"><h3>Build Your Own AI</h3><p>APIs, agents, memory, authentication, frontend, and deployment. Become an AI builder.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 10</div><div class="phase-info"><h3>AI Selection Framework</h3><p>Stop wasting time on the wrong tool — learn exactly when to use which AI.</p></div></div>
+        <div class="phase-item"><div class="phase-tag">Phase 11</div><div class="phase-info"><h3>Ethics and Safety</h3><p>Deepfakes, synthetic media, responsible use, and enterprise-grade AI safety habits.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools -->
+  <section class="section" id="tools" style="background: var(--white); border-top: 1px solid var(--bg-3);">
+    <div class="container">
+      <div style="max-width:540px; margin-bottom:40px;">
+        <div class="badge badge-gold mb-4">Tool Coverage</div>
+        <h2 class="section-title">15 AI tools.<br>One certification.</h2>
+        <p class="section-sub">Every major workplace AI tool covered, taught in context, mapped to a real work outcome.</p>
+      </div>
+      <div style="margin-bottom:40px;">
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>ChatGPT</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Gemini</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Claude</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Perplexity</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>NotebookLM</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Kimi</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Notion</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Zapier</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Gumloop</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Lovable</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Canva</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Wispr Flow</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Copilot</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Grok</a>
+        <a class="tool-chip" href="#"><span class="tool-dot"></span>Ask Gemini</a>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3 style="font-size:18px; margin-bottom:8px;">Text-first, self-paced</h3>
+          <p class="text-sm text-muted">No videos to sit through. Read, apply, submit. Each lesson ends with a real task and screenshot proof.</p>
+        </div>
+        <div class="card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3 style="font-size:18px; margin-bottom:8px;">Screenshot verification</h3>
+          <p class="text-sm text-muted">Every lesson requires a real output — a screenshot of your work proves you did it, not just read it.</p>
+        </div>
+        <div class="card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+          </div>
+          <h3 style="font-size:18px; margin-bottom:8px;">Verified certification</h3>
+          <p class="text-sm text-muted">Certificates with unique IDs and QR codes. Every certificate is publicly verifiable in seconds.</p>
+        </div>
+        <div class="card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 style="font-size:18px; margin-bottom:8px;">AI mentor support</h3>
+          <p class="text-sm text-muted">Stuck on a lesson? An AI mentor is available throughout the program to help you move forward.</p>
+        </div>
+        <div class="card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3 style="font-size:18px; margin-bottom:8px;">XP and streaks</h3>
+          <p class="text-sm text-muted">Earn XP, maintain streaks, and track your progress across all 15 phases with a personal score.</p>
+        </div>
+        <div class="card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 style="font-size:18px; margin-bottom:8px;">PC-first experience</h3>
+          <p class="text-sm text-muted">Built for the office. Designed to work alongside the tools you are already using every day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificates -->
+  <section class="section" style="background: var(--bg-2);">
+    <div class="container">
+      <div style="max-width:540px; margin-bottom:40px;">
+        <div class="badge badge-gold mb-4">Certification</div>
+        <h2 class="section-title">Two levels.<br>One real credential.</h2>
+        <p class="section-sub">Complete the program and earn a verifiable certificate linked to your name, your work, and your unique ID.</p>
+      </div>
+      <div class="grid-2">
+        <div class="cert-card">
+          <h3>Certified AI User</h3>
+          <p>Awarded after completing Phases 0–5. Demonstrates solid AI literacy, tool selection ability, and practical workplace skill.</p>
+        </div>
+        <div class="cert-card" style="background: var(--gold-dark);">
+          <h3 style="color: var(--white);">Certified AI Practitioner</h3>
+          <p>Awarded after completing all phases including automation and app creation. The full credential for serious workplace AI capability.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company -->
+  <section class="section" id="companies">
+    <div class="container">
+      <div class="company-box">
+        <div>
+          <div class="badge badge-gold mb-4">For Organizations</div>
+          <h2>Train your whole team.<br>Track every result.</h2>
+          <p>Company accounts give you a full admin dashboard — progress tracking, screenshot review, certificate management, and skill coverage reports across every department.</p>
+          <ul class="tick-list" style="margin-bottom:24px;">
+            <li><span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Team progress overview by department</li>
+            <li><span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Screenshot and task review workflow</li>
+            <li><span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Automated certificate issuance</li>
+            <li><span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>AI readiness score by team</li>
+            <li><span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Exportable compliance reports</li>
+          </ul>
+          <a class="btn btn-primary" href="login.html">Set Up Company Account</a>
+        </div>
+        <div>
+          <div class="card">
+            <div class="stat-label mb-4">Company Dashboard Preview</div>
+            <div class="stats-grid" style="grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="stat-card"><div class="stat-label">Learners</div><div class="stat-value" style="font-size:28px;">124</div></div>
+              <div class="stat-card"><div class="stat-label">Completion</div><div class="stat-value" style="font-size:28px; color:var(--gold);">68%</div></div>
+              <div class="stat-card"><div class="stat-label">Certified</div><div class="stat-value" style="font-size:28px;">41</div></div>
+              <div class="stat-card"><div class="stat-label">AI Readiness</div><div class="stat-value" style="font-size:28px; color:var(--green);">B+</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" style="background: var(--white); border-top: 1px solid var(--bg-3);">
+    <div class="container" style="max-width:720px;">
+      <div style="margin-bottom:40px; text-align:center;">
+        <h2 class="section-title">Common questions</h2>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is Intrucive really free?
+          <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a">Yes. The full learning program is free for individual learners. Company dashboard features for teams have a separate pricing model.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How long does it take to complete?
+          <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a">It is entirely self-paced. Most learners complete the core program in 4–8 weeks working an hour or two per day. You can go faster or slower as needed.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Do I need any technical background?
+          <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a">None at all. The program is designed for office employees, managers, HR professionals, and anyone who wants to work faster with AI. No coding required.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How are certificates verified?
+          <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a">Every certificate has a unique ID and a QR code that links to a public verification page. Anyone can confirm the certificate is genuine in seconds.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How does the company account work?
+          <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a">Employees sign up with your company's admin key, which connects them to your organization. The company admin dashboard then shows team-wide progress, certificate status, and skill coverage.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="background: var(--ink); text-align:center;">
+    <div class="container" style="max-width:640px;">
+      <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:20px;">Start Today</p>
+      <h2 style="font-family:var(--serif); font-size:clamp(36px,5vw,56px); font-weight:400; color:var(--white); margin-bottom:16px;">Your workplace AI<br>upgrade starts here.</h2>
+      <p style="font-size:16px; color:var(--ink-4); margin-bottom:36px; line-height:1.7;">Free. Self-paced. Practical. The only certification built for how people actually work.</p>
+      <a class="btn btn-primary btn-xl" href="login.html">Get Certified Free</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo"><img src="assets/logo.png" alt="Intrucive"></div>
+        <p>The free Workplace AI Operating System Certification. Built for modern teams and ambitious individuals.</p>
+      </div>
+      <div>
+        <h4>Program</h4>
+        <a href="#program">Curriculum</a>
+        <a href="#tools">Tools Covered</a>
+        <a href="#companies">For Companies</a>
+        <a href="certificate.html">Verify Certificate</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Sign In</a>
+        <a href="login.html">Create Account</a>
+        <a href="dashboard.html">Dashboard</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Intrucive. All rights reserved.</span>
+      <span>Learn AI. Build with AI. Work Faster.</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+<script>
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

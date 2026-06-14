@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — Intrucive</title>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo"><a href="index.html"><img src="assets/logo.png" alt="Intrucive"></a></div>
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-sub">Continue your AI certification journey</p>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="signin-panel">Sign In</div>
+      <div class="auth-tab" data-tab="signup-panel">Create Account</div>
+    </div>
+
+    <!-- Sign In -->
+    <div id="signin-panel" class="tab-panel active">
+      <form id="signin-form">
+        <div class="form-group">
+          <label for="si-email">Email</label>
+          <input id="si-email" type="email" placeholder="you@company.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="si-password">Password</label>
+          <input id="si-password" type="password" placeholder="Your password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary w-full" style="justify-content:center; padding:12px;">Sign In</button>
+      </form>
+      <p class="text-sm text-muted mt-4" style="text-align:center;">
+        <a href="#" style="color:var(--gold);">Forgot password?</a>
+      </p>
+    </div>
+
+    <!-- Sign Up -->
+    <div id="signup-panel" class="tab-panel">
+      <form id="signup-form">
+        <div class="form-group">
+          <label for="su-name">Full Name</label>
+          <input id="su-name" type="text" placeholder="Your full name" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="su-email">Email</label>
+          <input id="su-email" type="email" placeholder="you@company.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="su-password">Password</label>
+          <input id="su-password" type="password" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label for="su-company-key">Company Admin Key <span class="text-muted">(optional)</span></label>
+          <input id="su-company-key" type="text" placeholder="Enter if provided by your company">
+        </div>
+        <button type="submit" class="btn btn-primary w-full" style="justify-content:center; padding:12px;">Create Account</button>
+      </form>
+      <p class="text-xs text-muted mt-4" style="text-align:center; line-height:1.6;">
+        By creating an account you agree to our <a href="#" style="color:var(--gold);">Terms</a> and <a href="#" style="color:var(--gold);">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  // activate signup tab if hash
+  if (window.location.hash === '#signup') {
+    document.querySelector('[data-tab="signup-panel"]').click();
+  }
+  // redirect if already logged in
+  (async () => {
+    const session = await getSession();
+    if (session) {
+      const profile = await getUserProfile(session.user.id);
+      if (profile?.role === 'super_admin') window.location.href = 'superadmin.html';
+      else if (['company_admin','manager'].includes(profile?.role)) window.location.href = 'admin.html';
+      else window.location.href = 'dashboard.html';
+    }
+  })();
+</script>
+</body>
+</html>

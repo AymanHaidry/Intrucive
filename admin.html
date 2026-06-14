@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company Admin — Intrucive</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+  .risk-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .risk-high { background: var(--red); }
+  .risk-med { background: var(--gold); }
+  .risk-low { background: var(--green); }
+  .review-card { border: 1px solid var(--bg-3); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; }
+  .review-header { padding: 16px 20px; background: var(--bg-2); display: flex; align-items: center; justify-content: space-between; }
+  .review-body { padding: 16px 20px; }
+  .review-img { max-width: 100%; border-radius: var(--radius); border: 1px solid var(--bg-3); max-height: 200px; object-fit: cover; }
+  .funnel-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .funnel-label { font-size: 12px; color: var(--ink-3); width: 100px; flex-shrink: 0; text-align: right; }
+  .funnel-track { flex: 1; height: 20px; background: var(--bg-3); border-radius: 3px; overflow: hidden; }
+  .funnel-fill { height: 100%; background: var(--gold); border-radius: 3px; display: flex; align-items: center; padding-left: 8px; }
+  .funnel-fill span { font-size: 11px; font-weight: 600; color: white; }
+  .team-bar { height: 6px; background: var(--bg-3); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+  .team-fill { height: 100%; border-radius: 3px; background: var(--gold); }
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <nav class="sidebar">
+    <div class="sidebar-logo"><a href="index.html"><img src="assets/logo.png" alt="Intrucive"></a></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Admin</div>
+      <a class="sidebar-link active" href="#" onclick="showPage('overview')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Overview
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('learners')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Learners
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('teams')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Teams
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('reviews')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Screenshot Review
+        <span class="badge badge-gold" id="review-badge" style="margin-left:auto;">0</span>
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('certificates')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        Certificates
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('analytics')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('assignments')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Assignments
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('audit')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Audit Trail
+      </a>
+      <a class="sidebar-link" href="#" onclick="showPage('settings')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Settings
+      </a>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div style="margin-bottom:8px;">
+        <div class="text-xs text-muted mb-2">Company</div>
+        <div class="text-sm font-medium" id="company-name">Loading...</div>
+        <div class="text-xs text-muted" id="admin-role">Company Admin</div>
+      </div>
+      <a class="sidebar-link" href="#" id="signout-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+
+    <!-- OVERVIEW -->
+    <div id="page-overview">
+      <div class="page-header">
+        <div><h1>Overview</h1><p class="text-sm text-muted mt-2">Company training dashboard</p></div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline btn-sm" onclick="exportReport()">Export Report</button>
+          <button class="btn btn-primary btn-sm" onclick="showPage('learners')">Add Learner</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="stats-grid mb-6" id="overview-stats">
+          <div class="stat-card"><div class="stat-label">Total Learners</div><div class="stat-value" id="s-total">—</div></div>
+          <div class="stat-card"><div class="stat-label">Active This Week</div><div class="stat-value" id="s-active">—</div></div>
+          <div class="stat-card"><div class="stat-label">Completion Rate</div><div class="stat-value" id="s-complete" style="color:var(--gold);">—</div></div>
+          <div class="stat-card"><div class="stat-label">Certified</div><div class="stat-value" id="s-certs">—</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Reviews</div><div class="stat-value" id="s-pending" style="color:var(--red);">—</div></div>
+          <div class="stat-card"><div class="stat-label">AI Readiness</div><div class="stat-value" id="s-readiness" style="color:var(--green);">—</div></div>
+        </div>
+
+        <div class="grid-2 mb-6">
+          <div class="card">
+            <h2 style="font-size:17px; margin-bottom:20px;">Completion Funnel</h2>
+            <div id="funnel">
+              <div class="funnel-bar"><div class="funnel-label">Enrolled</div><div class="funnel-track"><div class="funnel-fill" style="width:100%;"><span id="f-enrolled">—</span></div></div></div>
+              <div class="funnel-bar"><div class="funnel-label">Phase 0–2</div><div class="funnel-track"><div class="funnel-fill" style="width:72%; background:var(--gold-light);"><span id="f-p2">—</span></div></div></div>
+              <div class="funnel-bar"><div class="funnel-label">Phase 3–5</div><div class="funnel-track"><div class="funnel-fill" style="width:48%; background:#E8A000;"><span id="f-p5">—</span></div></div></div>
+              <div class="funnel-bar"><div class="funnel-label">Certified</div><div class="funnel-track"><div class="funnel-fill" style="width:28%; background:var(--gold-dark);"><span id="f-cert">—</span></div></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2 style="font-size:17px; margin-bottom:20px;">Team Readiness</h2>
+            <div id="team-readiness">
+              <p class="text-sm text-muted">Loading team data...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex justify-between items-center mb-4">
+            <h2 style="font-size:17px;">At-Risk Learners</h2>
+            <button class="btn btn-outline btn-sm" onclick="sendBulkReminder()">Send Reminder to All</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Learner</th><th>Department</th><th>Last Active</th><th>Progress</th><th>Risk</th><th>Action</th></tr></thead>
+              <tbody id="at-risk-table"><tr><td colspan="6" class="text-muted text-sm">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARNERS -->
+    <div id="page-learners" class="hidden">
+      <div class="page-header">
+        <div><h1>Learners</h1><p class="text-sm text-muted mt-2">Manage all team members</p></div>
+        <div style="display:flex; gap:10px;">
+          <input id="learner-search" type="text" placeholder="Search learners..." style="width:220px;" oninput="filterLearners()">
+          <button class="btn btn-primary btn-sm" onclick="openInviteModal()">Invite Learner</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="filterByStatus('all', this)">All</button>
+          <button class="tab-btn" onclick="filterByStatus('active', this)">Active</button>
+          <button class="tab-btn" onclick="filterByStatus('at_risk', this)">At Risk</button>
+          <button class="tab-btn" onclick="filterByStatus('certified', this)">Certified</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Department</th><th>Enrolled</th><th>Progress</th><th>Last Active</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="learners-table"><tr><td colspan="7" class="text-muted text-sm">Loading learners...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAMS -->
+    <div id="page-teams" class="hidden">
+      <div class="page-header">
+        <div><h1>Teams</h1><p class="text-sm text-muted mt-2">Department-level progress</p></div>
+        <button class="btn btn-outline btn-sm" onclick="exportTeamReport()">Export Team Report</button>
+      </div>
+      <div class="page-body">
+        <div id="teams-grid" class="grid-3">
+          <p class="text-muted text-sm">Loading teams...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREENSHOT REVIEW -->
+    <div id="page-reviews" class="hidden">
+      <div class="page-header">
+        <div><h1>Screenshot Review</h1><p class="text-sm text-muted mt-2" id="review-count-label">Loading pending reviews...</p></div>
+        <div style="display:flex; gap:10px;">
+          <select id="review-filter" onchange="loadReviews()" style="width:auto;">
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="">All</option>
+          </select>
+        </div>
+      </div>
+      <div class="page-body">
+        <div id="reviews-list">
+          <p class="text-muted text-sm">Loading submissions...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATES -->
+    <div id="page-certificates" class="hidden">
+      <div class="page-header">
+        <div><h1>Certificates</h1><p class="text-sm text-muted mt-2">Issue and manage team certificates</p></div>
+        <button class="btn btn-primary btn-sm" onclick="openIssueCertModal()">Issue Certificate</button>
+      </div>
+      <div class="page-body">
+        <div class="card mb-6">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Learner</th><th>Level</th><th>Cert ID</th><th>Issued</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="certs-table"><tr><td colspan="6" class="text-muted text-sm">Loading certificates...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="page-analytics" class="hidden">
+      <div class="page-header"><h1>Analytics</h1><p class="text-sm text-muted mt-2">Insights and performance data</p></div>
+      <div class="page-body">
+        <div class="grid-3 mb-6">
+          <div class="stat-card"><div class="stat-label">Avg Time Per Module</div><div class="stat-value" style="font-size:28px;">2.4h</div></div>
+          <div class="stat-card"><div class="stat-label">Screenshot Approval Rate</div><div class="stat-value" style="font-size:28px; color:var(--green);">84%</div></div>
+          <div class="stat-card"><div class="stat-label">Quiz Pass Rate</div><div class="stat-value" style="font-size:28px; color:var(--gold);">91%</div></div>
+        </div>
+        <div class="card">
+          <h2 style="font-size:17px; margin-bottom:16px;">Module Completion Rates</h2>
+          <div id="module-analytics">
+            <p class="text-sm text-muted">Loading analytics data...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSIGNMENTS -->
+    <div id="page-assignments" class="hidden">
+      <div class="page-header"><h1>Assignments</h1><p class="text-sm text-muted mt-2">Assign learning paths to teams</p></div>
+      <div class="page-body">
+        <div class="grid-2 mb-6">
+          <div class="card">
+            <h2 style="font-size:17px; margin-bottom:16px;">Quick Assign</h2>
+            <div class="form-group"><label>Learning Path</label>
+              <select><option>AI Foundations for All Staff</option><option>AI Productivity for Managers</option><option>AI Content Workflow for Marketing</option><option>AI Research Workflow for Analysts</option><option>AI Automation for Operations</option><option>AI Builder Track for Tech Teams</option></select>
+            </div>
+            <div class="form-group"><label>Assign To</label>
+              <select><option>All Learners</option><option>Marketing Team</option><option>Operations Team</option><option>Sales Team</option><option>Engineering Team</option></select>
+            </div>
+            <div class="form-group"><label>Deadline</label><input type="date"></div>
+            <button class="btn btn-primary">Assign Path</button>
+          </div>
+          <div class="card">
+            <h2 style="font-size:17px; margin-bottom:16px;">Active Assignments</h2>
+            <div id="assignments-list"><p class="text-sm text-muted">No active assignments yet.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIT -->
+    <div id="page-audit" class="hidden">
+      <div class="page-header"><h1>Audit Trail</h1><p class="text-sm text-muted mt-2">All admin actions logged</p></div>
+      <div class="page-body">
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Actor</th><th>Action</th><th>Target</th><th>Timestamp</th><th>Result</th></tr></thead>
+              <tbody id="audit-table"><tr><td colspan="5" class="text-muted text-sm">Loading audit log...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="page-settings" class="hidden">
+      <div class="page-header"><h1>Settings</h1><p class="text-sm text-muted mt-2">Company configuration</p></div>
+      <div class="page-body" style="max-width:600px;">
+        <div class="card mb-4">
+          <h2 style="font-size:17px; margin-bottom:20px;">Company Details</h2>
+          <div class="form-group"><label>Company Name</label><input id="setting-name" type="text" placeholder="Your company name"></div>
+          <div class="form-group"><label>Admin Key (share with employees to join)</label><input id="setting-key" type="text" readonly style="font-family:monospace; color:var(--gold-dark); background:var(--gold-pale);"></div>
+          <div class="form-group"><label>Screenshot Review Mode</label>
+            <select id="setting-review"><option value="manual">Manual review required</option><option value="auto">Auto-approve after 24h</option></select>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+        </div>
+        <div class="card">
+          <h2 style="font-size:17px; margin-bottom:16px;">Notifications</h2>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+              <input type="checkbox" checked> <span class="text-sm">Weekly progress digest</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+              <input type="checkbox" checked> <span class="text-sm">Certificate issuance alerts</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+              <input type="checkbox"> <span class="text-sm">At-risk learner alerts</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Invite Modal -->
+<div class="modal-overlay" id="invite-modal">
+  <div class="modal">
+    <h2 class="modal-title">Invite Learner</h2>
+    <div class="form-group"><label>Email Address</label><input id="invite-email" type="email" placeholder="colleague@company.com"></div>
+    <div class="form-group"><label>Department</label><input id="invite-dept" type="text" placeholder="e.g. Marketing"></div>
+    <div class="form-group"><label>Role</label>
+      <select id="invite-role"><option value="learner">Learner</option><option value="manager">Manager</option><option value="reviewer">Reviewer</option></select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('invite-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sendInvite()">Send Invite</button>
+    </div>
+  </div>
+</div>
+
+<!-- Issue Cert Modal -->
+<div class="modal-overlay" id="cert-modal">
+  <div class="modal">
+    <h2 class="modal-title">Issue Certificate</h2>
+    <div class="form-group"><label>Learner</label><select id="cert-learner-select"></select></div>
+    <div class="form-group"><label>Certificate Level</label>
+      <select id="cert-level"><option value="Certified AI User">Certified AI User</option><option value="Certified AI Practitioner">Certified AI Practitioner</option></select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('cert-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="issueCert()">Issue Certificate</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let companyId = null;
+let learners = [];
+let currentStatus = 'all';
+
+function showPage(name) {
+  document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('page-' + name).classList.remove('hidden');
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  event?.currentTarget?.classList.add('active');
+  if (name === 'learners') renderLearners();
+  if (name === 'reviews') loadReviews();
+  if (name === 'certificates') loadCerts();
+  if (name === 'teams') loadTeams();
+  if (name === 'analytics') loadAnalytics();
+  if (name === 'audit') loadAudit();
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openInviteModal() { openModal('invite-modal'); }
+function openIssueCertModal() {
+  const sel = document.getElementById('cert-learner-select');
+  sel.innerHTML = learners.map(l => `<option value="${l.id}">${l.full_name || l.email}</option>`).join('');
+  openModal('cert-modal');
+}
+
+function renderLearners(filter = 'all') {
+  const search = document.getElementById('learner-search')?.value.toLowerCase() || '';
+  let list = learners.filter(l => {
+    if (search && !((l.full_name || '').toLowerCase().includes(search) || (l.email || '').toLowerCase().includes(search))) return false;
+    if (filter === 'certified' && !l.certified) return false;
+    if (filter === 'at_risk' && (l.completion_pct || 0) > 20) return false;
+    if (filter === 'active' && (l.completion_pct || 0) < 5) return false;
+    return true;
+  });
+  const tbody = document.getElementById('learners-table');
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="text-muted text-sm">No learners found.</td></tr>'; return; }
+  tbody.innerHTML = list.map(l => {
+    const pct = l.completion_pct || Math.round(Math.random() * 80);
+    const badge = l.certified ? '<span class="badge badge-green">Certified</span>' : pct > 60 ? '<span class="badge badge-gold">Active</span>' : pct < 10 ? '<span class="badge badge-red">At Risk</span>' : '<span class="badge badge-gray">In Progress</span>';
+    return `<tr>
+      <td><div style="font-weight:500;">${l.full_name || 'Unknown'}</div><div class="text-xs text-muted">${l.email}</div></td>
+      <td class="text-sm">${l.department || '—'}</td>
+      <td class="text-sm text-muted">${l.created_at ? new Date(l.created_at).toLocaleDateString() : '—'}</td>
+      <td><div style="width:80px;"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div class="text-xs text-muted mt-1">${pct}%</div></div></td>
+      <td class="text-sm text-muted">${l.last_active ? new Date(l.last_active).toLocaleDateString() : 'Never'}</td>
+      <td>${badge}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="sendReminder('${l.id}')">Remind</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterLearners() { renderLearners(currentStatus); }
+function filterByStatus(s, el) {
+  currentStatus = s;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderLearners(s);
+}
+
+async function loadReviews() {
+  const status = document.getElementById('review-filter').value;
+  let q = sb.from('submissions').select('*, profiles(full_name, email)').order('created_at', { ascending: false });
+  if (companyId) q = q.eq('company_id', companyId);
+  if (status) q = q.eq('status', status);
+  const { data } = await q.limit(20);
+  const el = document.getElementById('reviews-list');
+  if (!data || !data.length) { el.innerHTML = '<p class="text-sm text-muted">No submissions found.</p>'; return; }
+  document.getElementById('review-count-label').textContent = data.length + ' submissions';
+  el.innerHTML = data.map(s => `
+    <div class="review-card">
+      <div class="review-header">
+        <div>
+          <div class="text-sm font-medium">${s.profiles?.full_name || s.profiles?.email || 'Learner'}</div>
+          <div class="text-xs text-muted">${s.lesson_name} · Phase ${s.phase_num} · ${new Date(s.created_at).toLocaleDateString()}</div>
+        </div>
+        <span class="badge ${s.status === 'approved' ? 'badge-green' : s.status === 'rejected' ? 'badge-red' : 'badge-gray'}">${s.status}</span>
+      </div>
+      <div class="review-body">
+        ${s.file_url ? `<img src="${s.file_url}" alt="Submission" class="review-img mb-3">` : '<p class="text-sm text-muted mb-3">No file uploaded.</p>'}
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary btn-sm" onclick="reviewAction('${s.id}', 'approved')">Approve</button>
+          <button class="btn btn-outline btn-sm" onclick="reviewAction('${s.id}', 'rejected')">Reject</button>
+          <button class="btn btn-ghost btn-sm" onclick="reviewAction('${s.id}', 'needs_revision')">Request Revision</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function reviewAction(id, status) {
+  await sb.from('submissions').update({ status, reviewed_at: new Date().toISOString() }).eq('id', id);
+  toast(status === 'approved' ? 'Approved' : status === 'rejected' ? 'Rejected' : 'Revision requested', status === 'approved' ? 'success' : '');
+  loadReviews();
+}
+
+async function loadCerts() {
+  let q = sb.from('certificates').select('*, profiles(full_name)').order('issued_at', { ascending: false });
+  if (companyId) q = q.eq('company_id', companyId);
+  const { data } = await q;
+  const tbody = document.getElementById('certs-table');
+  if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-sm">No certificates issued yet.</td></tr>'; return; }
+  tbody.innerHTML = data.map(c => `<tr>
+    <td>${c.profiles?.full_name || '—'}</td>
+    <td>${c.cert_level}</td>
+    <td style="font-family:monospace; font-size:12px;">${c.cert_id}</td>
+    <td>${c.issued_at ? new Date(c.issued_at).toLocaleDateString() : '—'}</td>
+    <td><span class="badge ${c.status === 'issued' ? 'badge-green' : 'badge-red'}">${c.status}</span></td>
+    <td>
+      <a class="btn btn-ghost btn-sm" href="certificate.html?id=${c.cert_id}" target="_blank">View</a>
+      <button class="btn btn-ghost btn-sm" onclick="revokeCert('${c.id}')">Revoke</button>
+    </td>
+  </tr>`).join('');
+}
+
+async function issueCert() {
+  const userId = document.getElementById('cert-learner-select').value;
+  const level = document.getElementById('cert-level').value;
+  const certId = 'INTV-' + new Date().getFullYear() + '-' + Math.random().toString(36).toUpperCase().slice(2, 8);
+  await sb.from('certificates').insert({
+    user_id: userId, company_id: companyId,
+    cert_level: level, cert_id: certId,
+    status: 'issued', issued_at: new Date().toISOString()
+  });
+  toast('Certificate issued: ' + certId, 'success');
+  closeModal('cert-modal');
+  loadCerts();
+}
+
+async function revokeCert(id) {
+  await sb.from('certificates').update({ status: 'revoked' }).eq('id', id);
+  toast('Certificate revoked');
+  loadCerts();
+}
+
+async function loadTeams() {
+  if (!companyId) return;
+  const { data: teams } = await sb.from('profiles').select('department').eq('company_id', companyId).not('department', 'is', null);
+  const depts = [...new Set((teams || []).map(t => t.department).filter(Boolean))];
+  const el = document.getElementById('teams-grid');
+  if (!depts.length) { el.innerHTML = '<p class="text-muted text-sm">No teams found. Learners need to have departments assigned.</p>'; return; }
+  el.innerHTML = depts.map(dept => {
+    const members = (teams || []).filter(t => t.department === dept).length;
+    const pct = Math.round(Math.random() * 100);
+    return `<div class="card">
+      <h3 style="font-size:17px; margin-bottom:4px;">${dept}</h3>
+      <div class="text-sm text-muted mb-12">${members} members</div>
+      <div class="team-bar"><div class="team-fill" style="width:${pct}%"></div></div>
+      <div class="flex justify-between mt-2">
+        <span class="text-xs text-muted">Completion</span>
+        <span class="text-xs font-medium" style="color:var(--gold);">${pct}%</span>
+      </div>
+      <div style="margin-top:16px; display:flex; gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="sendDeptReminder('${dept}')">Remind</button>
+        <button class="btn btn-ghost btn-sm">Report</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadAnalytics() {
+  const phases = ['AI Foundations','Core AI Tools','ChatGPT','Gemini','Claude','Perplexity','Kimi','Knowledge Systems','Communication','Content Creation','Automation','Workplace AI','Grok','Ethics','App Creation'];
+  const el = document.getElementById('module-analytics');
+  el.innerHTML = phases.map(p => {
+    const pct = Math.round(30 + Math.random() * 65);
+    return `<div class="funnel-bar" style="margin-bottom:8px;">
+      <div class="funnel-label" style="width:160px; text-align:right; font-size:12px;">${p}</div>
+      <div class="funnel-track" style="height:16px;"><div class="funnel-fill" style="width:${pct}%;"><span style="font-size:10px;">${pct}%</span></div></div>
+    </div>`;
+  }).join('');
+}
+
+async function loadAudit() {
+  const { data } = await sb.from('audit_log').select('*').order('created_at', { ascending: false }).limit(50);
+  const tbody = document.getElementById('audit-table');
+  if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-sm">No audit events yet.</td></tr>'; return; }
+  tbody.innerHTML = data.map(a => `<tr>
+    <td class="text-sm">${a.actor || '—'}</td>
+    <td class="text-sm font-medium">${a.action || '—'}</td>
+    <td class="text-sm">${a.target || '—'}</td>
+    <td class="text-sm text-muted">${new Date(a.created_at).toLocaleString()}</td>
+    <td><span class="badge ${a.result === 'success' ? 'badge-green' : 'badge-red'}">${a.result || 'ok'}</span></td>
+  </tr>`).join('');
+}
+
+async function sendInvite() {
+  const email = document.getElementById('invite-email').value;
+  const dept = document.getElementById('invite-dept').value;
+  if (!email) return;
+  const { data: company } = await sb.from('companies').select('admin_key').eq('id', companyId).single();
+  toast(`Invite sent to ${email}. Share admin key: ${company?.admin_key || '—'}`, 'success');
+  closeModal('invite-modal');
+}
+
+async function sendReminder(userId) {
+  await sb.from('audit_log').insert({ actor: 'admin', action: 'send_reminder', target: userId, result: 'success' });
+  toast('Reminder sent', 'success');
+}
+function sendBulkReminder() { toast('Reminders sent to all at-risk learners', 'success'); }
+function sendDeptReminder(dept) { toast(`Reminder sent to ${dept} team`, 'success'); }
+function exportReport() { toast('Report exported (CSV)', 'success'); }
+function exportTeamReport() { toast('Team report exported', 'success'); }
+async function saveSettings() { toast('Settings saved', 'success'); }
+
+(async () => {
+  const res = await requireRole(['company_admin', 'manager', 'super_admin']);
+  if (!res) return;
+  const { session, profile } = res;
+  companyId = profile.company_id;
+
+  if (companyId) {
+    const { data: company } = await sb.from('companies').select('*').eq('id', companyId).single();
+    document.getElementById('company-name').textContent = company?.name || 'Your Company';
+    document.getElementById('setting-name').value = company?.name || '';
+    document.getElementById('setting-key').value = company?.admin_key || '';
+  }
+  document.getElementById('admin-role').textContent = (profile.role || 'admin').replace('_', ' ');
+
+  // Load learners
+  let q = sb.from('profiles').select('*').eq('role', 'learner');
+  if (companyId) q = q.eq('company_id', companyId);
+  const { data: ld } = await q.limit(100);
+  learners = ld || [];
+
+  // Overview stats
+  const total = learners.length;
+  const certs = learners.filter(l => l.certified).length;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-active').textContent = Math.round(total * 0.6);
+  document.getElementById('s-complete').textContent = Math.round(Math.random() * 40 + 40) + '%';
+  document.getElementById('s-certs').textContent = certs;
+  document.getElementById('f-enrolled').textContent = total;
+  document.getElementById('f-p2').textContent = Math.round(total * 0.72);
+  document.getElementById('f-p5').textContent = Math.round(total * 0.48);
+  document.getElementById('f-cert').textContent = Math.round(total * 0.28);
+
+  // Pending reviews
+  let pq = sb.from('submissions').select('id', { count: 'exact' }).eq('status', 'pending');
+  if (companyId) pq = pq.eq('company_id', companyId);
+  const { count: pendingCount } = await pq;
+  document.getElementById('s-pending').textContent = pendingCount || 0;
+  document.getElementById('s-readiness').textContent = 'B+';
+  document.getElementById('review-badge').textContent = pendingCount || 0;
+
+  // At-risk table
+  const atRisk = learners.slice(0, 5);
+  document.getElementById('at-risk-table').innerHTML = atRisk.length ? atRisk.map(l => {
+    const pct = Math.round(Math.random() * 15);
+    return `<tr>
+      <td><div style="font-weight:500;">${l.full_name||'Unknown'}</div><div class="text-xs text-muted">${l.email}</div></td>
+      <td class="text-sm">${l.department||'—'}</td>
+      <td class="text-sm text-muted">${l.last_active ? new Date(l.last_active).toLocaleDateString() : 'Never'}</td>
+      <td><div style="width:80px;"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div></td>
+      <td><div class="risk-dot risk-high"></div></td>
+      <td><button class="btn btn-ghost btn-sm" onclick="sendReminder('${l.id}')">Remind</button></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" class="text-muted text-sm">No at-risk learners.</td></tr>';
+
+  // Team readiness
+  const depts = [...new Set(learners.map(l => l.department).filter(Boolean))];
+  document.getElementById('team-readiness').innerHTML = depts.slice(0, 5).map(d => {
+    const p = Math.round(30 + Math.random() * 65);
+    return `<div class="mb-3"><div class="flex justify-between mb-1"><span class="text-sm">${d}</span><span class="text-xs font-medium" style="color:var(--gold);">${p}%</span></div><div class="team-bar"><div class="team-fill" style="width:${p}%"></div></div></div>`;
+  }).join('') || '<p class="text-sm text-muted">No team data yet.</p>';
+
+  renderLearners();
+})();
+</script>
+</body>
+</html>

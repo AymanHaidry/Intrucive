@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate Verification — Intrucive</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+  .verify-bar { background: var(--white); border-bottom: 1px solid var(--bg-3); padding: 16px 32px; display: flex; align-items: center; gap: 20px; }
+  .ornament { color: var(--gold); font-family: var(--serif); font-size: 24px; opacity: 0.4; }
+  @media print {
+    .no-print { display: none !important; }
+    .certificate { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<div class="cert-page">
+  <!-- Search bar -->
+  <div class="verify-bar no-print">
+    <a href="index.html"><img src="assets/logo.png" alt="Intrucive" style="height:28px;"></a>
+    <div style="flex:1; max-width:400px; margin-left:auto; margin-right:auto; display:flex; gap:8px;">
+      <input id="cert-id-input" type="text" placeholder="Enter certificate ID (e.g. INTV-2025-XXXXX)" style="flex:1;">
+      <button class="btn btn-primary btn-sm" onclick="verifyCert()">Verify</button>
+    </div>
+    <a href="dashboard.html" class="btn btn-ghost btn-sm">My Account</a>
+  </div>
+
+  <!-- Error state -->
+  <div id="error-state" class="hidden" style="text-align:center; padding:80px 32px;">
+    <p style="font-size:48px; margin-bottom:16px; opacity:0.3;">?</p>
+    <h2 class="section-title" style="font-size:28px; margin-bottom:12px;">Certificate not found</h2>
+    <p class="text-muted">Double-check the certificate ID and try again. IDs are case-sensitive.</p>
+  </div>
+
+  <!-- Certificate display -->
+  <div id="cert-display" style="padding:40px 32px; max-width:900px; margin:0 auto;">
+    <!-- Validity banner -->
+    <div id="validity-banner" class="hidden" style="display:flex; align-items:center; gap:12px; background:#E6F4EE; border:1px solid #B8DFC9; border-radius:var(--radius); padding:14px 20px; margin-bottom:24px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      <div>
+        <div style="font-size:14px; font-weight:600; color:var(--green);">Verified Certificate</div>
+        <div style="font-size:12px; color:var(--green); opacity:0.8;" id="validity-sub">This certificate is authentic and was issued by Intrucive.</div>
+      </div>
+      <button class="btn btn-outline btn-sm no-print" onclick="window.print()" style="margin-left:auto;">Print Certificate</button>
+    </div>
+
+    <!-- Certificate -->
+    <div class="certificate" id="cert-doc">
+      <div class="cert-logo"><img src="assets/logo.png" alt="Intrucive"></div>
+      <span class="ornament">— ✦ —</span>
+      <div class="cert-label" style="margin-top:16px;">Certificate of Achievement</div>
+      <div class="cert-title" id="cert-type">Certified AI Practitioner</div>
+      <div class="cert-sub">This is to certify that</div>
+      <div class="cert-name" id="cert-name">Full Name</div>
+      <div class="cert-desc" id="cert-desc">has successfully completed the Intrucive AI Professional Program, demonstrating practical proficiency across all phases of workplace AI tools, automation, and application development.</div>
+      <div style="display:flex; justify-content:center; gap:48px; margin-bottom:28px; margin-top:8px;">
+        <div style="text-align:center;">
+          <div style="height:1px; width:120px; background:var(--bg-3); margin:0 auto 8px;"></div>
+          <div class="text-xs text-muted" id="cert-issuer">Intrucive Platform</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="height:1px; width:120px; background:var(--bg-3); margin:0 auto 8px;"></div>
+          <div class="text-xs text-muted" id="cert-date">Issue Date</div>
+        </div>
+      </div>
+      <div class="cert-id" id="cert-id-display">Certificate ID: INTV-2025-XXXXX</div>
+    </div>
+
+    <!-- Default state if no cert loaded -->
+    <div id="default-state" style="text-align:center; padding:20px 0;" class="no-print">
+      <p class="text-muted text-sm mt-4">Enter a certificate ID above to verify it, or <a href="login.html" style="color:var(--gold);">sign in</a> to view your own certificates.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script>
+function toast(msg, type) {
+  const c = document.getElementById('toast');
+  const d = document.createElement('div');
+  d.className = 'toast-item' + (type ? ' ' + type : '');
+  d.textContent = msg;
+  c.appendChild(d);
+  setTimeout(() => d.remove(), 3200);
+}
+
+async function verifyCert() {
+  const id = document.getElementById('cert-id-input').value.trim();
+  if (!id) return;
+  const { data, error } = await sb.from('certificates')
+    .select('*, profiles(full_name)')
+    .eq('cert_id', id)
+    .single();
+  if (error || !data) {
+    document.getElementById('error-state').classList.remove('hidden');
+    document.getElementById('validity-banner').classList.add('hidden');
+    return;
+  }
+  document.getElementById('error-state').classList.add('hidden');
+  document.getElementById('default-state').classList.add('hidden');
+  document.getElementById('validity-banner').style.display = 'flex';
+  document.getElementById('validity-banner').classList.remove('hidden');
+  document.getElementById('cert-type').textContent = data.cert_level || 'Certified AI Practitioner';
+  document.getElementById('cert-name').textContent = data.profiles?.full_name || data.learner_name || 'Learner';
+  document.getElementById('cert-desc').textContent = data.description || 'has successfully completed the Intrucive AI Professional Program, demonstrating practical proficiency across workplace AI tools, automation, and application development.';
+  document.getElementById('cert-date').textContent = 'Issued: ' + new Date(data.issued_at).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('cert-id-display').textContent = 'Certificate ID: ' + data.cert_id;
+  document.getElementById('validity-sub').textContent = 'Issued on ' + new Date(data.issued_at).toLocaleDateString() + ' · Status: ' + (data.status || 'Valid');
+}
+
+// Check URL params
+const params = new URLSearchParams(location.search);
+const certId = params.get('id');
+if (certId) {
+  document.getElementById('cert-id-input').value = certId;
+  verifyCert();
+}
+
+// Check if logged in and show own certs
+(async () => {
+  const session = await getSession();
+  if (!session || certId) return;
+  const { data: certs } = await sb.from('certificates')
+    .select('*')
+    .eq('user_id', session.user.id)
+    .eq('status', 'issued')
+    .order('issued_at', { ascending: false })
+    .limit(1);
+  if (certs && certs.length) {
+    document.getElementById('cert-id-input').value = certs[0].cert_id;
+    verifyCert();
+  }
+})();
+</script>
+</body>
+</html>
